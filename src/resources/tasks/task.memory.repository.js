@@ -33,16 +33,34 @@ const updateTask = async (boardId, taskId, taskData) => {
 };
 
 const deleteTask = async (boardId, taskId) => {
-  const taskToDelete = tasks.find(
+  const taskToDelete = tasks.findIndex(
     (task) => task.id === taskId && task.boardId === boardId
   );
   tasks.splice(taskToDelete, 1);
 };
 
+const updateTasksOnBoardDelete = async (id) => {
+  const filteredTasks = tasks.filter((task) => task.boardId !== id);
+  tasks.length = 0;
+  tasks.push(...filteredTasks);
+};
+
+const updateTaskAssignee = async (id) => {
+  tasks.forEach((task) => {
+    if (task.userId === id) {
+      const taskToupdate = task;
+      taskToupdate.userId = null;
+    }
+  });
+};
+
 module.exports = {
+  tasks,
   getAll,
   getTaskById,
   createTask,
   updateTask,
   deleteTask,
+  updateTasksOnBoardDelete,
+  updateTaskAssignee,
 };
